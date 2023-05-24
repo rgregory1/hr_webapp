@@ -1,0 +1,48 @@
+<script>
+
+  document.addEventListener("DOMContentLoaded", getListOfEmployees())
+  
+  // document.addEventListener("DOMContentLoaded", function() {
+  //  console.log('this function loaded and executed')
+  // });
+
+  function getListOfEmployees(){
+    google.script.run.withSuccessHandler(function(employeeData){
+      console.log(employeeData)
+
+      let employeeResults = document.getElementById("employeeResults");
+      let employeeRowTemplate =
+              document.getElementById("employeeRowTemplate");
+      let employeeTemplate = employeeRowTemplate.content;
+
+      employeeResults.innerHTML = "";
+
+      employeeData.forEach(emp => {
+              let empDetail = employeeTemplate.cloneNode(true);
+              let empCell = empDetail.querySelector(".mainInfo");
+              empCell.textContent = emp[1] + ' ' + emp[2];
+
+              var empEditButton =
+                empDetail.querySelector(".edit-button");
+              empEditButton.dataset.employeeId = emp[0];
+
+              employeeResults.appendChild(empDetail);
+            });
+    }).getListOfNewEmplyees()
+  }
+// function handleNewEmployeeSubmit(){
+  // let data = {
+  //   firstName: document.getElementById('first-name').value,
+  //   lastName: document.getElementById('last-name').value,
+  //   location: document.getElementById('location').value,
+  //   category: document.getElementById('category').value,
+  //   position: document.getElementById('position').value,
+  //   personalEmail: document.getElementById('personal-email').value,
+  //   effectiveDate: document.getElementById('effective-date').value
+  // }
+  // console.log(data)
+  // google.script.run.processForm(data)
+
+  // document.getElementById('newEmployeeForm').reset()
+// }
+</script>

@@ -1,0 +1,197 @@
+<script>
+  document.addEventListener("DOMContentLoaded", setupPage())
+
+  function setupPage(){
+    
+    loadDataFields()
+
+  }
+
+
+  function loadDataFields(){
+    
+
+    const empId = document.getElementById("empId").innerHTML
+    console.log(empId)
+    
+    google.script.run.withSuccessHandler((data)=>{
+        console.log(data)
+
+        document.getElementById('first-name').value = data.first
+        lastName: document.getElementById('last-name').value = data.last
+        document.getElementById('location').value = data.location
+        document.getElementById('category').value = data.category
+        document.getElementById('position').value = data.position
+        document.getElementById('personal-email').value = data.personalEmail
+        document.getElementById('effective-date').value = data.effectiveDate
+        
+        let employeeInfoSection = document.getElementById('employee-info-section')
+
+        let sections = [
+          ["HR Director", "hrd_section"],
+          ["HR Admin Asst","hra_section"],
+          ["Benefits Coordinator","bec_section"],
+          ["Fiscal Services","fis_section"],
+          ["IT & Data","tec_section"]
+          ]
+
+        sections.forEach(section => {
+
+          let subSection = document.createElement("div")
+          subSection.classList.add("border","border-2","rounded","p-2","mb-3")
+          employeeInfoSection.appendChild(subSection)
+
+          let sectionTitle = document.createElement("h3")
+          sectionTitle.innerHTML = section[0]
+          subSection.appendChild(sectionTitle)
+
+          let array = data[section[1]]
+          console.log(array)
+          createDataPoints(array,subSection)
+        })
+
+        // console.log('before log changes')
+        // logChanges()
+        // console.log('after log changes')
+       
+
+    })
+    .packageEmployeeData(empId)
+
+    
+  }
+
+  function createDataPoints(array,employeeInfoSection){
+    console.log('here')
+
+    
+    array.forEach(field =>{
+
+          let div= document.createElement("div")
+          div.classList.add("mb-2")
+          div.classList.add("row")
+
+          let firstColumn = document.createElement("div")
+          firstColumn.classList.add("col-3")
+          let secondColumn = document.createElement("div")
+          secondColumn.classList.add("col-9")
+          div.appendChild(firstColumn)
+          div.appendChild(secondColumn)
+
+          let label = document.createElement("label")
+          label.setAttribute("for", field.header)
+          label.innerHTML = field.text
+          label.classList.add("form-label")
+          label.classList.add("form-label-sm")
+          
+          let input = document.createElement("select")
+          input.setAttribute("id",field.header)
+          input.classList.add("text-center")
+          input.classList.add("form-select")
+          input.classList.add("form-select-sm")
+          input.classList.add("todo")
+        
+          let option1 = document.createElement("option")
+          let option2 = document.createElement("option")
+          option2.setAttribute("value","X")
+          option2.innerHTML = "X"
+          let option3 = document.createElement("option")
+          option3.setAttribute("value","N/A")
+          option3.innerHTML = "N/A"
+          
+          input.appendChild(option1)
+          input.appendChild(option2)
+          input.appendChild(option3)
+          input.value = field.status
+          
+          firstColumn.appendChild(input)
+          secondColumn.appendChild(label)
+
+          firstColumn.addEventListener('change', (event) => {
+            const selectHeader = event.target.id;
+            const selectValue = event.target.value;
+            
+            console.log(selectHeader, selectValue);
+            handleUpdateEmployee(selectHeader, selectValue)
+          });
+          
+          employeeInfoSection.appendChild(div)
+        })
+  }
+  
+
+  function handleUpdateEmployee(header, value){
+
+    const empId = document.getElementById("empId").innerHTML
+
+    google.script.run.withSuccessHandler(()=>{
+
+      // change background to green
+      let itemToChage = document.getElementById(header).parentElement.parentElement
+      console.log(itemToChage)
+      // itemToChage.classList.add("update-success")
+      // setTimeout(function(){
+      //   itemToChage.classList.remove("update-success")
+      // },3000)
+      itemToChage.style.backgroundColor = "#C1E1C1"
+      setTimeout(function() {
+        itemToChage.style.transition = "background-color 2s";
+        itemToChage.style.backgroundColor = "transparent";
+      }, 3000);
+    }).updateNewEmployee(empId,header, value)
+  }
+
+
+  // function handleSaveChanges(){
+
+  //  let data = {
+  //   id: document.getElementById("empId").innerHTML,
+  //   year: "23-24",
+  //   first: document.getElementById('first-name').value,
+  //   last: document.getElementById('last-name').value,
+  //   location: document.getElementById('location').value,
+  //   category: document.getElementById('category').value,
+  //   position: document.getElementById('position').value,
+  //   personal_email: document.getElementById('personal-email').value,
+  //   effective_date: document.getElementById('effective-date').value
+  // }
+  
+  //   let todoElements = document.getElementsByClassName('todo')
+
+  //   // Iterate through each 'todo' element
+  //   for (var i = 0; i < todoElements.length; i++) {
+  //     // Get the id and value of the current 'todo' element
+  //     var id = todoElements[i].id;
+  //     var value = todoElements[i].value;
+      
+  //     data[id] = value
+      
+  //   }
+
+  //   console.log(data)
+  // }
+  
+  // function logChanges(){
+
+  //   // Get all select elements
+  //   const selectElements = document.getElementsByClassName('todo');
+
+  //   // Create an object to store the changed field values
+  //   const changedValues = {};
+
+  //   // Add change event listener to each select element
+  //   selectElements.forEach((select) => {
+  //     select.addEventListener('change', (event) => {
+  //       const selectId = event.target.id;
+  //       const selectValue = event.target.value;
+        
+  //       // Store the changed value in the changedValues object
+  //       changedValues[selectId] = selectValue;
+  //       console.log(changedValues);
+  //     });
+  //   });
+  // }
+  
+
+
+</script>

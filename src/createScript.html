@@ -1,0 +1,19 @@
+<script>
+
+function handleNewEmployeeSubmit(){
+
+  let data = {
+    firstName: document.getElementById('first-name').value,
+    lastName: document.getElementById('last-name').value,
+    location: document.getElementById('location').value,
+    category: document.getElementById('category').value,
+    position: document.getElementById('position').value,
+    personalEmail: document.getElementById('personal-email').value,
+    effectiveDate: document.getElementById('effective-date').value
+  }
+  console.log(data)
+  google.script.run.processForm(data)
+
+  // document.getElementById('newEmployeeForm').reset()
+}
+</script>
